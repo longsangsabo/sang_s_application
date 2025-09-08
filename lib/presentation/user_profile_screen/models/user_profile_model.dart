@@ -1,5 +1,6 @@
 import '../../../core/app_export.dart';
 import '../user_profile_screen.dart';
+import '../../models/social_interaction_model.dart';
 
 /// This class is used in the [UserProfileScreen] screen.
 
@@ -103,4 +104,35 @@ class UserProfileModel extends Equatable {
         isLiked,
         id,
       ];
+
+  /// Convert to SocialInteractionModel for interaction buttons
+  SocialInteractionModel toSocialInteractionModel() {
+    return SocialInteractionModel(
+      isLiked: isLiked ?? false,
+      isSaved: false, // Default value, will be managed separately
+      likesCount: _parseCount(likesCount ?? '0'),
+      commentsCount: _parseCount(messagesCount ?? '0'),
+      sharesCount: _parseCount(sharesCount ?? '0'),
+      id: id,
+    );
+  }
+
+  /// Parse count string (e.g., "328.7K" -> 328700)
+  int _parseCount(String countString) {
+    if (countString.isEmpty) return 0;
+    
+    final cleanString = countString.toLowerCase().trim();
+    
+    if (cleanString.endsWith('k')) {
+      final numberPart = cleanString.substring(0, cleanString.length - 1);
+      final number = double.tryParse(numberPart) ?? 0;
+      return (number * 1000).round();
+    } else if (cleanString.endsWith('m')) {
+      final numberPart = cleanString.substring(0, cleanString.length - 1);
+      final number = double.tryParse(numberPart) ?? 0;
+      return (number * 1000000).round();
+    } else {
+      return int.tryParse(cleanString) ?? 0;
+    }
+  }
 }

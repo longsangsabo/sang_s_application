@@ -3,6 +3,8 @@ import '../../core/app_export.dart';
 import '../../widgets/custom_image_view.dart';
 import '../../widgets/custom_app_bar.dart';
 import '../../widgets/custom_icon_button.dart';
+import '../../widgets/connected_social_interaction_buttons.dart';
+import '../../widgets/profile_interaction_components.dart';
 import 'notifier/user_profile_notifier.dart';
 
 class UserProfileInitialPage extends ConsumerStatefulWidget {
@@ -121,9 +123,45 @@ class UserProfileInitialPageState extends ConsumerState<UserProfileInitialPage>
           SizedBox(height: 12.h),
           _buildInteractionStats(context),
           SizedBox(height: 16.h),
+          _buildIntegratedInteractions(context),
+          SizedBox(height: 16.h),
           _buildUserInfo(context),
         ],
       ),
+    );
+  }
+
+  Widget _buildIntegratedInteractions(BuildContext context) {
+    final state = ref.watch(userProfileNotifier);
+    final userModel = state.userProfileModel;
+    
+    if (userModel == null) {
+      return SizedBox.shrink();
+    }
+
+    final itemId = userModel.id ?? 'user_profile_${userModel.userHandle}';
+    
+    return IntegratedProfileInteractions(
+      itemId: itemId,
+      initialData: userModel.toSocialInteractionModel(),
+      layoutStyle: ProfileInteractionLayout.stacked,
+      onCommentPressed: () {
+        debugPrint('Navigate to comments for user: ${userModel.userName}');
+        // TODO: Navigate to comments screen
+      },
+      onSharePressed: () {
+        _handleShareProfile(userModel);
+      },
+      onPlayNowPressed: () {
+        debugPrint('Play now with: ${userModel.userName}');
+        ref.read(userProfileNotifier.notifier).onPlayNowPressed();
+        // TODO: Navigate to game setup
+      },
+      onSchedulePressed: () {
+        debugPrint('Schedule game with: ${userModel.userName}');
+        ref.read(userProfileNotifier.notifier).onSchedulePressed();
+        // TODO: Navigate to schedule screen
+      },
     );
   }
 
@@ -274,22 +312,6 @@ class UserProfileInitialPageState extends ConsumerState<UserProfileInitialPage>
     );
   }
 
-  Widget _buildPlayNowText(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(top: 17.h),
-      child: Text(
-        'Chơi luôn',
-        style: TextStyleHelper.instance.body13RegularABeeZee.copyWith(shadows: [
-          Shadow(
-            color: appTheme.color4C0000,
-            offset: Offset(1, 1),
-            blurRadius: 1,
-          ),
-        ]),
-      ),
-    );
-  }
-
   Widget _buildScheduleAction(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -359,48 +381,49 @@ class UserProfileInitialPageState extends ConsumerState<UserProfileInitialPage>
   }
 
   Widget _buildSocialStats(BuildContext context) {
-    return Column(
-      children: [
-        _buildStatItem(
-          icon: ImageConstant.imgHeartIcon,
-          count: '328.7K',
-        ),
-        SizedBox(height: 24.h),
-        _buildStatItem(
-          icon: ImageConstant.imgMessageIcon,
-          count: '578',
-        ),
-        SizedBox(height: 20.h),
-        _buildStatItem(
-          icon: ImageConstant.imgShareIcon,
-          count: '99',
-        ),
-      ],
+    final state = ref.watch(userProfileNotifier);
+    final userModel = state.userProfileModel;
+    
+    if (userModel == null) {
+      return SizedBox.shrink();
+    }
+
+    // Create unique item ID for this user profile
+    final itemId = userModel.id ?? 'user_profile_${userModel.userHandle}';
+    
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 8.h),
+      child: ConnectedSocialInteractionButtons(
+        itemId: itemId,
+        initialData: userModel.toSocialInteractionModel(),
+        showCounts: true,
+        buttonSpacing: 12.0,
+        iconSize: 28.0,
+        onCommentPressed: () {
+          // Navigate to comments/messages screen
+          debugPrint('Navigate to comments for user: ${userModel.userName}');
+        },
+        onSharePressed: () {
+          // Custom share functionality for user profile
+          _handleShareProfile(userModel);
+        },
+        onLikeChanged: (isLiked) {
+          // Update user profile like state
+          ref.read(userProfileNotifier.notifier).onLikePressed();
+        },
+        onSaveChanged: (isSaved) {
+          // Handle save/bookmark user profile
+          debugPrint('Profile ${isSaved ? 'saved' : 'unsaved'}: ${userModel.userName}');
+        },
+      ),
     );
   }
 
-  Widget _buildStatItem({required String icon, required String count}) {
-    return Column(
-      children: [
-        CustomImageView(
-          imagePath: icon,
-          height: 32.h,
-          width: 34.h,
-        ),
-        SizedBox(height: 6.h),
-        Text(
-          count,
-          style:
-              TextStyleHelper.instance.body13RegularABeeZee.copyWith(shadows: [
-            Shadow(
-              color: appTheme.color4C0000,
-              offset: Offset(1, 1),
-              blurRadius: 1,
-            ),
-          ]),
-        ),
-      ],
-    );
+  void _handleShareProfile(userModel) {
+    // TODO: Implement profile sharing
+    final shareText = 'Check out ${userModel?.userName} on SABO Billiards! '
+        'Rank: ${userModel?.rank}, Location: ${userModel?.location}';
+    debugPrint('Sharing profile: $shareText');
   }
 
   Widget _buildUserInfo(BuildContext context) {

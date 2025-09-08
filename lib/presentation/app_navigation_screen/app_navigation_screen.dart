@@ -28,6 +28,12 @@ class AppNavigationScreenState extends ConsumerState<AppNavigationScreen> {
                         onTapScreenTitle: () => onTapScreenTitle(
                             context, AppRoutes.userProfileScreen),
                       ),
+                      _buildScreenTitle(
+                        context,
+                        screenTitle: "Interaction Buttons Demo",
+                        onTapScreenTitle: () => onTapScreenTitle(
+                            context, AppRoutes.interactionButtonsDemo),
+                      ),
                     ],
                   ),
                 ),

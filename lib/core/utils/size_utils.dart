@@ -7,8 +7,11 @@ const num FIGMA_DESIGN_STATUS_BAR = 0;
 
 extension ResponsiveExtension on num {
   double get _width => SizeUtils.width;
+  double get _height => SizeUtils.height;
 
   double get h => ((this * _width) / FIGMA_DESIGN_WIDTH);
+
+  double get v => ((this * _height) / FIGMA_DESIGN_HEIGHT);
 
   double get fSize => ((this * _width) / FIGMA_DESIGN_WIDTH);
 }

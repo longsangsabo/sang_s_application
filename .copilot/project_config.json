@@ -1,0 +1,56 @@
+{
+  "project": {
+    "name": "sang_s_application",
+    "type": "flutter_mobile_app",
+    "owner": "longsangsabo",
+    "version": "1.0.0+1",
+    "flutter_version": "^3.6.0"
+  },
+  "architecture": {
+    "pattern": "clean_architecture",
+    "state_management": "riverpod",
+    "navigation": "traditional_navigator", 
+    "future_navigation": "go_router",
+    "backend": "supabase_planned",
+    "design_system": "material_design_3"
+  },
+  "dependencies": {
+    "state_management": ["flutter_riverpod"],
+    "ui": ["flutter_svg", "cached_network_image", "gradient_borders"],
+    "storage": ["shared_preferences"],
+    "connectivity": ["connectivity_plus"],
+    "utils": ["equatable"]
+  },
+  "features": {
+    "implemented": [
+      "user_profile_screen",
+      "app_navigation_screen", 
+      "custom_bottom_navigation",
+      "theme_system",
+      "responsive_design",
+      "custom_widgets"
+    ],
+    "planned": [
+      "go_router_navigation",
+      "supabase_integration",
+      "freezed_models",
+      "authentication",
+      "real_time_features"
+    ]
+  },
+  "coding_standards": {
+    "null_safety": true,
+    "error_handling": "comprehensive",
+    "documentation": "dartdoc",
+    "testing": "unit_tests_required",
+    "performance": "optimized_widgets"
+  },
+  "ai_instructions": {
+    "system_prompt_path": ".copilot/system_prompt.md",
+    "follow_clean_architecture": true,
+    "use_riverpod_state_management": true,
+    "implement_material_design_3": true,
+    "write_production_ready_code": true,
+    "include_comprehensive_error_handling": true
+  }
+}
